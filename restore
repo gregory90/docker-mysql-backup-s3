@@ -1,0 +1,35 @@
+#!/bin/bash -e
+
+if [ -z "$ACCESS_KEY" ] ; then
+    echo "ACCESS_KEY not specified"
+    exit 1
+fi
+
+if [ -z "$SECRET_KEY" ] ; then
+    echo "SECRET_KEY not specified"
+    exit 1
+fi
+
+if [ -z "$BUCKET" ] ; then
+    echo "BUCKET not specified"
+    exit 1
+fi
+
+if [ -z "$FILE" ] ; then
+    echo "FILE not specified"
+    exit 1
+fi
+
+echo "Restoring $FILE"
+s3cmd --access_key="$ACCESS_KEY" --secret_key="$SECRET_KEY" \
+      -c /dev/null $S3CMD_OPTS get $BUCKET/$FILE.tar.gz /backup/bck.tar.gz 
+
+gzip -d /backup/bck.tar.gz
+
+tar xf /backup/bck.tar -C /backup
+
+rm -rf /backup/bck.tar
+mv /backup/backup/**/* /backup
+rm -rf /backup/backup
+
+innobackupex --copy-back /backup

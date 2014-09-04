@@ -1,0 +1,70 @@
+#!/bin/bash -e
+
+if [ -z "$TIMEOUT" ] ; then
+    TIMEOUT=86400
+fi
+
+if [ -z "$DATADIR" ] ; then
+    DATADIR="/var/lib/mysql/"
+fi
+
+if [ -z "$DBHOST" ] ; then
+    echo "DBHOST not specified"
+    exit 1
+fi
+
+if [ -z "$DBUSER" ] ; then
+    echo "DBUSER not specified"
+    exit 1
+fi
+
+if [ -z "$DBPASS" ] ; then
+    echo "DBPASS not specified"
+    exit 1
+fi
+
+if [ -z "$ACCESS_KEY" ] ; then
+    echo "ACCESS_KEY not specified"
+    exit 1
+fi
+
+if [ -z "$SECRET_KEY" ] ; then
+    echo "SECRET_KEY not specified"
+    exit 1
+fi
+
+if [ -z "$BUCKET" ] ; then
+    echo "BUCKET not specified"
+    exit 1
+fi
+
+
+backup_and_stream_to_s3() {
+  while true
+  do
+    echo "Clean"
+    rm -rf /backup/*
+    echo "Backup"
+    innobackupex --defaults-file=/app/my.cnf --host=$DBHOST --user=$DBUSER --password=$DBPASS /backup
+
+    BACKUP=`ls /backup`
+
+    cp /var/lib/mysql/debian* /backup/$BACKUP
+
+    innobackupex --defaults-file=/app/my.cnf --apply-log /backup/$BACKUP
+
+    tar -cf /backup/$BACKUP.tar /backup/$BACKUP
+    gzip -7 /backup/$BACKUP.tar
+
+    echo "Upload $BACKUP"
+    s3cmd --access_key="$ACCESS_KEY" --secret_key="$SECRET_KEY" \
+          -c /dev/null $S3CMD_OPTS put "/backup/$BACKUP.tar.gz" $BUCKET/$BACKUP.tar.gz
+
+    echo "Sleep"
+    sleep $TIMEOUT
+  done
+}
+
+backup_and_stream_to_s3
+
+wait
