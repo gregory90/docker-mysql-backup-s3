@@ -32,4 +32,4 @@ rm -rf /backup/bck.tar
 mv /backup/backup/**/* /backup
 rm -rf /backup/backup
 
-innobackupex --copy-back /backup
+innobackupex --defaults-file=/app/my.cnf --copy-back /backup

@@ -4,10 +4,6 @@ if [ -z "$TIMEOUT" ] ; then
     TIMEOUT=86400
 fi
 
-if [ -z "$DATADIR" ] ; then
-    DATADIR="/var/lib/mysql/"
-fi
-
 if [ -z "$DBHOST" ] ; then
     echo "DBHOST not specified"
     exit 1
@@ -38,6 +34,7 @@ if [ -z "$BUCKET" ] ; then
     exit 1
 fi
 
+DATADIR="/data"
 
 backup_and_stream_to_s3() {
   while true
@@ -49,7 +46,7 @@ backup_and_stream_to_s3() {
 
     BACKUP=`ls /backup`
 
-    cp /var/lib/mysql/debian* /backup/$BACKUP
+    cp $DATADIR/debian* /backup/$BACKUP
 
     innobackupex --defaults-file=/app/my.cnf --apply-log /backup/$BACKUP
 
