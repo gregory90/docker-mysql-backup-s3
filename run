@@ -9,6 +9,11 @@ if [ -z "$DBHOST" ] ; then
     exit 1
 fi
 
+if [ -z "$DBPORT" ] ; then
+    echo "DBPORT not specified"
+    exit 1
+fi
+
 if [ -z "$DBUSER" ] ; then
     echo "DBUSER not specified"
     exit 1
@@ -42,7 +47,7 @@ backup_and_stream_to_s3() {
     echo "Clean"
     rm -rf /backup/*
     echo "Backup"
-    innobackupex --defaults-file=/app/my.cnf --host=$DBHOST --user=$DBUSER --password=$DBPASS /backup
+    innobackupex --defaults-file=/app/my.cnf --host=$DBHOST --port=$DBPORT --user=$DBUSER --password=$DBPASS /backup
 
     BACKUP=`ls /backup`
 

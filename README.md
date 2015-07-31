@@ -11,6 +11,7 @@ AWS\_ACCESS\_KEY\_ID- AWS S3 access key,
 AWS\_SECRET\_ACCESS\_KEY - AWS S3 secret key,  
 BUCKET - AWS S3 bucket for backup,   
 DBHOST - MySQL host,  
+DBPORT - MySQL port,  
 DBUSER - MySQL user,  
 DBPASS - MySQL password.  
 
