@@ -1,12 +1,12 @@
 #!/bin/bash -e
 
-if [ -z "$ACCESS_KEY" ] ; then
-    echo "ACCESS_KEY not specified"
+if [ -z "$AWS_ACCESS_KEY_ID" ] ; then
+    echo "AWS_ACCESS_KEY_ID not specified"
     exit 1
 fi
 
-if [ -z "$SECRET_KEY" ] ; then
-    echo "SECRET_KEY not specified"
+if [ -z "$AWS_SECRET_ACCESS_KEY" ] ; then
+    echo "AWS_SECRET_ACCESS_KEY not specified"
     exit 1
 fi
 
@@ -21,8 +21,7 @@ if [ -z "$FILE" ] ; then
 fi
 
 echo "Restoring $FILE"
-s3cmd --access_key="$ACCESS_KEY" --secret_key="$SECRET_KEY" \
-      -c /dev/null $S3CMD_OPTS get $BUCKET/$FILE.tar.gz /backup/bck.tar.gz 
+aws s3 cp $BUCKET/$FILE.tar.gz /backup/bck.tar.gz 
 
 gzip -d /backup/bck.tar.gz
 
