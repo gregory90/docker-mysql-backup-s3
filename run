@@ -46,8 +46,6 @@ backup_and_stream_to_s3() {
 
     BACKUP=`ls /backup`
 
-    cp $DATADIR/debian* /backup/$BACKUP
-
     innobackupex --defaults-file=/app/my.cnf --apply-log /backup/$BACKUP
 
     tar -cf /backup/$BACKUP.tar /backup/$BACKUP
