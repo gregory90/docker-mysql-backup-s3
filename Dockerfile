@@ -5,8 +5,6 @@ RUN apt-get update && \
     easy_install pip && \
     pip install awscli
 
-RUN mkdir /backup
-
 ADD run /app/run
 ADD restore /app/restore
 ADD my.cnf /app/my.cnf
