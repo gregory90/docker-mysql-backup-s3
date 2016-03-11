@@ -25,6 +25,8 @@ rm -rf /backup
 mkdir /backup
 aws s3 cp $BUCKET/$FILE.tar.gz /backup/bck.tar.gz 
 
+ls /backup
+
 gzip -d /backup/bck.tar.gz
 
 tar xf /backup/bck.tar -C /backup
@@ -33,5 +35,8 @@ rm -rf /backup/bck.tar
 mv /backup/backup/**/* /backup
 rm -rf /backup/backup
 
+ls /data
 rm -rf /data/*
+ls /data
 innobackupex --defaults-file=/app/my.cnf --copy-back /backup
+ls /data
