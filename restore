@@ -21,6 +21,8 @@ if [ -z "$FILE" ] ; then
 fi
 
 echo "Restoring $FILE"
+rm -rf /backup
+mkdir /backup
 aws s3 cp $BUCKET/$FILE.tar.gz /backup/bck.tar.gz 
 
 gzip -d /backup/bck.tar.gz
